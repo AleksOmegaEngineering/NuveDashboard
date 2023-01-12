@@ -67,9 +67,11 @@
             <p>You are seaching: {value}</p>
         </div>
     </div>
+    {#key currentSort}
     {#each users as person}
         <div class="patient-accordion"> <PatientComp firstName={person.firstName} lastName={person.lastName} age={person.age}></PatientComp> </div>
     {/each}
+    {/key}
 </main>
 
 <style>
