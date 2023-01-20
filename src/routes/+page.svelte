@@ -1,8 +1,15 @@
 <script lang="ts">
     export let data;
-    const { users } = data;
+    let { users } = data;
 	import PatientComp from "../components/PatientComp.svelte";
     import { Button, Search, Dropdown, DropdownItem, Chevron } from 'flowbite-svelte'
+
+    let visiblePass : boolean;
+    let insuranceFilter : boolean;
+    function toggleInsuranceFilter() {
+        insuranceFilter = !insuranceFilter;
+    }
+    $: filteredItems = insuranceFilter ? users.filter((i: { insuranceBool: any; }) => i.insuranceBool) : users;
 
     ///search bar submit and clear
     let searchFirstName = '';
@@ -24,17 +31,26 @@
     let currentSort : string;
     function alphabeticalSort() {
         if (currentSort != "alphabetical")
+            insuranceFilter = false;
             users.sort((a: { firstName: string; }, b: { firstName: string; }) => a.firstName.localeCompare(b.firstName));
+            users = users;
             currentSort = "alphabetical";
     }
     function timeSort() {
         if (currentSort != "time")
+            insuranceFilter = false;
             users.sort((a: { age: number; }, b: { age: number; }) => a.age - b.age)
+            users = users;
             currentSort = "time";
     }
     function insuranceSort() {
         if (currentSort != "insurance")
+            insuranceFilter = true;
+            users = users;
             currentSort = "insurance";
+    }
+    function setVisible( bool : boolean) {
+        visiblePass = bool;
     }
 </script>
 
@@ -67,8 +83,8 @@
             <p>You are seaching: {value}</p>
         </div>
     </div>
-    {#each users as person}
-        <div class="patient-accordion"> <PatientComp firstName={person.firstName} lastName={person.lastName} age={person.age}></PatientComp> </div>
+    {#each users as person (person.id) }
+        <div class="patient-accordion"> <PatientComp insuranceFilter={insuranceFilter} person={person} firstName={person.firstName} lastName={person.lastName} age={person.age} on:interactionToggled={() => person.insuranceBool = !person.insuranceBool}></PatientComp> </div>
     {/each}
 </main>
 
