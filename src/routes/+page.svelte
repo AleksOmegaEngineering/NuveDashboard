@@ -6,17 +6,13 @@
 
     let visiblePass : boolean;
     let insuranceFilter : boolean;
-    function toggleInsuranceFilter() {
-        insuranceFilter = !insuranceFilter;
-    }
-    $: filteredItems = insuranceFilter ? users.filter((i: { insuranceBool: any; }) => i.insuranceBool) : users;
 
     ///search bar submit and clear
-    let searchFirstName = '';
-    let searchLastName = '';
-    let searchQuery = '';
     let value = '';
+    let searchQuery = '';
+
     const submitted = () => {
+        currentSort = "searching";
         searchQuery = value;
     };
 
@@ -25,20 +21,29 @@
         searchQuery = '';
     };
 
+    $: if (!value) searchQuery = ""; 
+
     function searchSort( person : object) {
     };
+
+    function clearAll() {
+        insuranceFilter = false;
+        value = '';
+        searchQuery = '';
+    }
 
     let currentSort : string;
     function alphabeticalSort() {
         if (currentSort != "alphabetical")
-            insuranceFilter = false;
+            clearAll();
             users.sort((a: { firstName: string; }, b: { firstName: string; }) => a.firstName.localeCompare(b.firstName));
             users = users;
             currentSort = "alphabetical";
     }
+    alphabeticalSort();
     function timeSort() {
         if (currentSort != "time")
-            insuranceFilter = false;
+            clearAll();
             users.sort((a: { age: number; }, b: { age: number; }) => a.age - b.age)
             users = users;
             currentSort = "time";
@@ -48,9 +53,6 @@
             insuranceFilter = true;
             users = users;
             currentSort = "insurance";
-    }
-    function setVisible( bool : boolean) {
-        visiblePass = bool;
     }
 </script>
 
@@ -80,11 +82,10 @@
                     <DropdownItem on:click={insuranceSort}>Has Insurance</DropdownItem>
                 </Dropdown>
             </form>
-            <p>You are seaching: {value}</p>
         </div>
     </div>
     {#each users as person (person.id) }
-        <div class="patient-accordion"> <PatientComp insuranceFilter={insuranceFilter} person={person} firstName={person.firstName} lastName={person.lastName} age={person.age} on:interactionToggled={() => person.insuranceBool = !person.insuranceBool}></PatientComp> </div>
+        <div class="patient-accordion"> <PatientComp insuranceFilter={insuranceFilter} searchQuery={searchQuery} person={person} firstName={person.firstName} lastName={person.lastName} age={person.age} on:interactionToggled={() => person.insuranceBool = !person.insuranceBool}></PatientComp> </div>
     {/each}
 </main>
 

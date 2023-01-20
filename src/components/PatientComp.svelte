@@ -11,6 +11,7 @@
     /// non-API patient information
     export let person : { insuranceBool: boolean }
     export let insuranceFilter : boolean
+    export let searchQuery : string
     let fullName = firstName + " " + lastName;
     let hasInsurance : boolean;
     let hasPrice : string;
@@ -33,6 +34,7 @@
 
 </script>
 {#if !insuranceFilter || (insuranceFilter && person.insuranceBool)}
+    {#if !searchQuery || (searchQuery && (fullName.toLowerCase().includes(searchQuery.toLowerCase())))}
     <Accordion>
         <AccordionItem>
                 <span slot="header">
@@ -71,6 +73,7 @@
             </div>
         </AccordionItem>
     </Accordion>
+    {/if}
 {/if}
 <style>
     span{
