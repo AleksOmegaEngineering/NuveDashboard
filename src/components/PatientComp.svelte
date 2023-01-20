@@ -27,6 +27,7 @@
     const dispatch = createEventDispatcher();
 
     function toggleInteraction() {
+        hasInsurance = !hasInsurance;
         dispatch('interactionToggled');
     }
 
@@ -56,7 +57,7 @@
                 <p class="mb-2 text-gray-500 dark:text-gray-400">Dummy text dummy text dummy text</p>
             </div>
             <div class="element" style="display:flex">
-                <Checkbox on:click={toggleInteraction} bind:checked={hasInsurance} style="margin-top: 5px"></Checkbox>
+                <Checkbox on:click={toggleInteraction} style="margin-top: 5px"></Checkbox>
                 <p style="margin-left: 10px" class="mb-2 text-gray-500 dark:text-gray-400"> Does the patient have insurance?</p>
             </div>
             <div class="element">
